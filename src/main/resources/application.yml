@@ -1,23 +1,26 @@
-spring:
-  application:
-    name: "bus-lines"
-  config:
-    import: env.properties
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+#spring:
+#  application:
+#    name: "bus-lines"
+#  config:
+#    import: env.properties
+#  datasource:
+#    url: ${DB_URL}
+#    username: ${DB_USER}
+#    password: ${DB_PASSWORD}
+#  jpa:
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
 
 server:
   port: 8080
 
 application:
-  apiUrl: "https://api.sl.se/api2/linedata.json?key=${API_KEY}&model=jour&DefaultTransportModeCode=BUS"
+  baseUrl: "https://api.sl.se/api2/linedata.json?key=${API_KEY}"
+  stopPointUrl: "${application.baseUrl}&model=stop"
+  lineUrl: "${application.baseUrl}&model=line&DefaultTransportModeCode=BUS"
+  journeyPatternUrl: "${application.baseUrl}&model=jour&DefaultTransportModeCode=BUS"
