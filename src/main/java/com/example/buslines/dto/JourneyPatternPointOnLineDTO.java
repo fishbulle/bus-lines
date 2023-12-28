@@ -7,12 +7,18 @@ import lombok.Data;
 public class JourneyPatternPointOnLineDTO implements ResultDTO {
 
     @JsonProperty
-    private String lineNumber;
+    private int lineNumber;
 
     @JsonProperty
-    private String directionCode;
+    private int directionCode;
 
     @JsonProperty
-    private String journeyPatternPointNumber;
+    private int journeyPatternPointNumber;
+
+    @JsonProperty
+    private String lastModifiedUtcDateTime;
+
+    @JsonProperty
+    private String existsFromDate;
 
 }
