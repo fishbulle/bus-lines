@@ -10,10 +10,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class ApiClient implements ApplicationRunner {
+public class ApiClient /*implements ApplicationRunner*/ {
 
     private final StopRepository stopRepository;
     private final BusRepository busRepository;
@@ -25,66 +23,17 @@ public class ApiClient implements ApplicationRunner {
         this.apiService = apiService;
     }
 
-    @Override
+/*    @Override
     public void run(ApplicationArguments args) {
-        processAndStoreData();
+        fetchData();
+    }*/
+
+    public void fetchData() {
+        // grab the stopNumber and stopName
+        apiService.getStops().getResponseData().getResult(); // something
+
+        // grab the lineNumber and journeyPatternPointNumber
+        // map the journeyPatternPointNumber to the stopNumber -> get the stopName
+        apiService.getJourneyPattern().getResponseData().getResult();  // something
     }
-
-    public void processAndStoreData() {
-        apiService.getStops().subscribe(stopPointsResponse -> {
-            processAndStoreStopPoints(stopPointsResponse.getResponseData().getResult());
-        });
-
-        apiService.getJourneyPattern().subscribe(journeyPatternResponse -> {
-            processAndStoreJourneyPatterns(journeyPatternResponse.getResponseData().getResult());
-        });
-    }
-
-    public void processAndStoreStopPoints(List<StopPointDTO> stopPoints) {
-        for (StopPointDTO stopPointDTO : stopPoints) {
-            String stopPointNumber = stopPointDTO.getStopPointNumber();
-
-            StopEntity stopEntity = stopRepository.findByStopPointNumber(stopPointNumber)
-                    .orElseGet(() -> {
-                        StopEntity newStop = new StopEntity();
-                        newStop.setStopPointNumber(stopPointNumber);
-                        return stopRepository.save(newStop);
-                    });
-
-            String stopPointName = stopPointDTO.getStopPointName();
-            StopEntity stopEntity2 = stopRepository.findByStopPointName(stopPointName)
-                    .orElseGet(() -> {
-                        StopEntity newStop = new StopEntity();
-                        newStop.setStopPointName(stopPointName);
-                        return stopRepository.save(newStop);
-                    });
-
-            stopRepository.save(stopEntity);
-            stopRepository.save(stopEntity2);
-        }
-    }
-
-    public void processAndStoreJourneyPatterns(List<JourneyPatternPointOnLineDTO> journeyPatterns) {
-        for (JourneyPatternPointOnLineDTO journeyPatternDTO : journeyPatterns) {
-            String lineNumber = journeyPatternDTO.getLineNumber();
-            String stopPointNumber = journeyPatternDTO.getJourneyPatternPointNumber();
-
-            BusEntity bus = busRepository.findByLineNumber(lineNumber)
-                    .orElseGet(() -> {
-                        BusEntity newBus = new BusEntity();
-                        newBus.setLineNumber(lineNumber);
-                        return busRepository.save(newBus);
-                    });
-
-            StopEntity stop = stopRepository.findByStopPointNumber(stopPointNumber)
-                    .orElseGet(() -> {
-                        StopEntity newStop = new StopEntity();
-                        newStop.setStopPointNumber(stopPointNumber);
-                        return stopRepository.save(newStop);
-                    });
-
-                stop.setBus(bus);
-                stopRepository.save(stop);
-            }
-        }
-    }
+}
