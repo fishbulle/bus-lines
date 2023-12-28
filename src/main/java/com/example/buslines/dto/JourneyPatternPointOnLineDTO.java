@@ -14,4 +14,5 @@ public class JourneyPatternPointOnLineDTO {
 
     @JsonProperty
     private String journeyPatternPointNumber;
+
 }

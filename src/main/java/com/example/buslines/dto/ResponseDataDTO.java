@@ -3,7 +3,7 @@ package com.example.buslines.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Collection;
+import java.util.List;
 
 @Data
 public class ResponseDataDTO<T> {
@@ -15,5 +15,5 @@ public class ResponseDataDTO<T> {
     private String type;
 
     @JsonProperty
-    private Collection<T> result;
+    private List<T> result;
 }

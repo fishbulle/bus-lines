@@ -3,8 +3,6 @@ package com.example.buslines.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Collection;
-
 @Data
 public class StopPointDTO {
 
@@ -12,5 +10,5 @@ public class StopPointDTO {
     private String stopPointNumber;
 
     @JsonProperty
-    private Collection<String> stopPointName;
+    private String stopPointName;
 }
