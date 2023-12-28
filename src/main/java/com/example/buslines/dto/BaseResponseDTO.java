@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class BaseResponseDTO<T> {
+public class BaseResponseDTO {
 
     @JsonProperty
     private int statusCode;
@@ -13,8 +13,8 @@ public class BaseResponseDTO<T> {
     private String message;
 
     @JsonProperty
-    private int ExecutionTime;
+    private int executionTime;
 
     @JsonProperty
-    private ResponseDataDTO<T> responseData;
+    private ResponseDataDTO responseData;
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class JourneyPatternPointOnLineDTO {
+public class JourneyPatternPointOnLineDTO implements ResultDTO {
 
     @JsonProperty
     private String lineNumber;

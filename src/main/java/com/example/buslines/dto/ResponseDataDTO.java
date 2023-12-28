@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ResponseDataDTO<T> {
+public class ResponseDataDTO {
 
     @JsonProperty
     private String version;
@@ -15,5 +15,5 @@ public class ResponseDataDTO<T> {
     private String type;
 
     @JsonProperty
-    private List<T> result;
+    private ResultDTO[] result;
 }
