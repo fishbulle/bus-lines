@@ -59,14 +59,6 @@ public class ApiClient implements ApplicationRunner {
                         return stopRepository.save(newStop);
                     });
 
-            BusEntity defaultBus = busRepository.findById(1L)
-                    .orElseGet(() -> {
-                        BusEntity newBus = new BusEntity();
-                        newBus.setLineNumber("Default Line");
-                        return busRepository.save(newBus);
-                    });
-
-            stopEntity.setBus(defaultBus);
             stopRepository.save(stopEntity);
             stopRepository.save(stopEntity2);
         }
