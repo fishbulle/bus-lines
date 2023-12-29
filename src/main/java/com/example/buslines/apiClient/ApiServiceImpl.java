@@ -1,6 +1,7 @@
 package com.example.buslines.apiClient;
 
-import com.example.buslines.dto.BaseResponseDTO;
+import com.example.buslines.dto.journey.JourneyBaseDTO;
+import com.example.buslines.dto.stop.StopBaseDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -24,22 +25,29 @@ public class ApiServiceImpl implements ApiService {
         this.restTemplate = restTemplate;
     }
 
-    @Override
-    public BaseResponseDTO getJourneyPattern() {
-        return getBaseResponseDTO(journeyPatternUrl);
-    }
 
     @Override
-    public BaseResponseDTO getStops() {
-        return getBaseResponseDTO(stopPointUrl);
-    }
-
-    private BaseResponseDTO getBaseResponseDTO(String url) {
+    public JourneyBaseDTO getJourneyPattern() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        ResponseEntity<BaseResponseDTO> response = restTemplate.exchange(
-                url,
+        ResponseEntity<JourneyBaseDTO> response = restTemplate.exchange(
+                journeyPatternUrl,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        return response.getBody();
+    }
+
+    @Override
+    public StopBaseDTO getStops() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<StopBaseDTO> response = restTemplate.exchange(
+                stopPointUrl,
                 HttpMethod.GET,
                 entity,
                 new ParameterizedTypeReference<>() {}

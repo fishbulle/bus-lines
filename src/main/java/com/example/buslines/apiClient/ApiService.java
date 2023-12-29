@@ -1,9 +1,10 @@
 package com.example.buslines.apiClient;
 
-import com.example.buslines.dto.BaseResponseDTO;
+import com.example.buslines.dto.journey.JourneyBaseDTO;
+import com.example.buslines.dto.stop.StopBaseDTO;
 
 public interface ApiService {
 
-    BaseResponseDTO getJourneyPattern();
-    BaseResponseDTO getStops();
+    JourneyBaseDTO getJourneyPattern();
+    StopBaseDTO getStops();
 }
