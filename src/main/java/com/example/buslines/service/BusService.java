@@ -34,7 +34,7 @@ public class BusService {
                         Collectors.mapping(jourResult -> nameConverter(jourResult.getJourneyPatternPointNumber(), stopList), Collectors.toList())));
 
         Map<Integer, List<String>> sortedBusList = busList.entrySet().stream()
-                .sorted(Map.Entry.<Integer, List<String>>comparingByValue(Comparator.<List<String>, Integer>comparing(List::size).reversed()))
+                .sorted(Map.Entry.comparingByValue(Comparator.<List<String>, Integer>comparing(List::size).reversed()))
                 .limit(10)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
