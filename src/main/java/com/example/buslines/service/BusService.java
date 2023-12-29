@@ -1,31 +1,59 @@
 package com.example.buslines.service;
 
-import com.example.buslines.dto.StopPointDTO;
-import com.example.buslines.model.BusEntity;
-import com.example.buslines.model.StopEntity;
-import com.example.buslines.repository.BusRepository;
-import com.example.buslines.repository.StopRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.buslines.apiClient.ApiService;
+import com.example.buslines.dto.*;
+import com.example.buslines.dto.journey.JourneyBaseDTO;
+import com.example.buslines.dto.journey.JourneyResultDTO;
+import com.example.buslines.dto.stop.StopBaseDTO;
+import com.example.buslines.dto.stop.StopResultDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class BusService {
 
-    @Autowired
-    private BusRepository busRepository;
+    private final ApiService apiService;
 
-    @Autowired
-    private StopRepository stopRepository;
+    public BusService(ApiService apiService) {
+        this.apiService = apiService;
+    }
 
-    public List<BusEntity> getTopBusesWithMostStops(int limit) {
-        List<BusEntity> topBuses = busRepository.findAll();
-        topBuses.sort(Comparator.comparingInt(bus -> bus.getStops().size()));
-        Collections.reverse(topBuses);
-        return topBuses.stream().limit(limit).collect(Collectors.toList());
+    public List<BusListResponse> getBusListResponse() {
+        StopBaseDTO stopResponse = apiService.getStops();
+        JourneyBaseDTO jourResponse = apiService.getJourneyPattern();
+
+        Map<String, String> stopList = Arrays.stream(stopResponse.getResponseData().getResult())
+                .collect(Collectors.toMap(StopResultDTO::getStopPointNumber, StopResultDTO::getStopPointName));
+
+        Map<Integer, List<String>> busList = Arrays.stream(jourResponse.getResponseData().getResult())
+                .parallel()
+                .collect(Collectors.groupingBy(
+                        JourneyResultDTO::getLineNumber,
+                        Collectors.mapping(jourResult -> nameConverter(jourResult.getJourneyPatternPointNumber(), stopList), Collectors.toList())));
+
+        Map<Integer, List<String>> sortedBusList = busList.entrySet().stream()
+                .sorted(Map.Entry.<Integer, List<String>>comparingByValue(Comparator.<List<String>, Integer>comparing(List::size).reversed()))
+                .limit(10)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        return sortedBusList.entrySet().stream()
+                .map(entry -> new BusListResponse(
+                        entry.getKey(),
+                        entry.getValue()
+                )).toList();
+    }
+
+    public String nameConverter(Integer bussStop, Map<String, String> stopList) {
+
+        if (stopList.containsKey(String.valueOf(bussStop)))
+            return stopList.get(String.valueOf(bussStop));
+        return null;
     }
 }
