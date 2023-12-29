@@ -3,26 +3,9 @@ spring:
     name: "bus-lines"
   config:
     import: env.properties
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-  codec:
-    max-in-memory-size: 20MB
-
 server:
   port: 8080
-
 application:
   baseUrl: "https://api.sl.se/api2/LineData.json?key=${API_KEY}"
   stopPointUrl: "${application.baseUrl}&model=stop"
-  lineUrl: "${application.baseUrl}&model=line&DefaultTransportModeCode=BUS"
   journeyPatternUrl: "${application.baseUrl}&model=jour&DefaultTransportModeCode=BUS"
