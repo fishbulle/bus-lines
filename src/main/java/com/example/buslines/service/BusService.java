@@ -30,6 +30,7 @@ public class BusService {
         Map<Integer, List<String>> busList = Arrays.stream(jourResponse.getResponseData().getResult())
                 .parallel()
                 // filter direction code here ??
+                //.filter(p -> p.getDirectionCode() == 2)
                 .collect(Collectors.groupingBy(
                         JourneyResultDTO::getLineNumber,
                         Collectors.mapping(jourResult -> nameConverter(

@@ -12,6 +12,6 @@ public class JourneyResultDTO {
     @JsonProperty("JourneyPatternPointNumber")
     private int journeyPatternPointNumber;
 
-/*    @JsonProperty("DirectionCode")
-    private int directionCode;*/
+    @JsonProperty("DirectionCode")
+    private int directionCode;
 }
