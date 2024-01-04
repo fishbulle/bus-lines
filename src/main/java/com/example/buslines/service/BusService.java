@@ -29,9 +29,12 @@ public class BusService {
 
         Map<Integer, List<String>> busList = Arrays.stream(jourResponse.getResponseData().getResult())
                 .parallel()
+                // filter direction code here ??
                 .collect(Collectors.groupingBy(
                         JourneyResultDTO::getLineNumber,
-                        Collectors.mapping(jourResult -> nameConverter(jourResult.getJourneyPatternPointNumber(), stopList), Collectors.toList())));
+                        Collectors.mapping(jourResult -> nameConverter(
+                                jourResult.getJourneyPatternPointNumber(), stopList),
+                                Collectors.toList())));
 
         Map<Integer, List<String>> sortedBusList = busList.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.<List<String>, Integer>comparing(List::size).reversed()))
