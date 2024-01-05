@@ -42,7 +42,7 @@ public class BusService {
                 .filter(p -> p.getDirectionCode() == 1)
                 .collect(Collectors.groupingBy(
                         JourneyResultDTO::getLineNumber,
-                        Collectors.mapping(jourResult -> nameConverter(
+                        Collectors.mapping(jourResult -> getStopName(
                                         jourResult.getJourneyPatternPointNumber(), stopList),
                                 Collectors.toList())));
     }
@@ -67,8 +67,7 @@ public class BusService {
                 )).toList();
     }
 
-    public String nameConverter(Integer bussStop, Map<String, String> stopList) {
-
+    public String getStopName(Integer bussStop, Map<String, String> stopList) {
         if (stopList.containsKey(String.valueOf(bussStop)))
             return stopList.get(String.valueOf(bussStop));
         return null;
