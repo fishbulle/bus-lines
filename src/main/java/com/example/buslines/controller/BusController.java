@@ -19,8 +19,12 @@ public class BusController {
 
     @GetMapping
     public ResponseEntity<?> getTopBusLines() {
-        List<BusListResponse> topBuses = busService.getBusListResponse();
-        return ResponseEntity.ok(topBuses);
+        try {
+            List<BusListResponse> topBuses = busService.getBusListResponse();
+            return ResponseEntity.ok(topBuses);
+        } catch (Exception exception) {
+            return ResponseEntity.internalServerError().body(exception.getMessage());
+        }
     }
 
 }
