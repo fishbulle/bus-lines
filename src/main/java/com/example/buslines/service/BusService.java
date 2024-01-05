@@ -24,20 +24,31 @@ public class BusService {
         StopBaseDTO stopResponse = apiService.getStops();
         JourneyBaseDTO jourResponse = apiService.getJourneyPattern();
 
-        Map<String, String> stopList = Arrays.stream(stopResponse.getResponseData().getResult())
-                .collect(Collectors.toMap(StopResultDTO::getStopPointNumber, StopResultDTO::getStopPointName));
+        Map<String, String> stopList = createStopListMap(stopResponse);
+        Map<Integer, List<String>> busList = createBusListMap(jourResponse, stopList);
+        Map<Integer, List<String>> sortedBusList = sortAndLimitBusList(busList);
 
-        Map<Integer, List<String>> busList = Arrays.stream(jourResponse.getResponseData().getResult())
+        return mapToBusListResponse(sortedBusList);
+    }
+
+    private Map<String, String> createStopListMap(StopBaseDTO stopResponse) {
+        return Arrays.stream(stopResponse.getResponseData().getResult())
+                .collect(Collectors.toMap(StopResultDTO::getStopPointNumber, StopResultDTO::getStopPointName));
+    }
+
+    private Map<Integer, List<String>> createBusListMap(JourneyBaseDTO jourResponse, Map<String, String> stopList) {
+        return Arrays.stream(jourResponse.getResponseData().getResult())
                 .parallel()
-                // filter direction code here ??
                 .filter(p -> p.getDirectionCode() == 1)
                 .collect(Collectors.groupingBy(
                         JourneyResultDTO::getLineNumber,
                         Collectors.mapping(jourResult -> nameConverter(
-                                jourResult.getJourneyPatternPointNumber(), stopList),
+                                        jourResult.getJourneyPatternPointNumber(), stopList),
                                 Collectors.toList())));
+    }
 
-        Map<Integer, List<String>> sortedBusList = busList.entrySet().stream()
+    private Map<Integer, List<String>> sortAndLimitBusList(Map<Integer, List<String>> busList) {
+        return busList.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.<List<String>, Integer>comparing(List::size).reversed()))
                 .limit(10)
                 .collect(Collectors.toMap(
@@ -46,7 +57,9 @@ public class BusService {
                         (e1, e2) -> e1,
                         LinkedHashMap::new
                 ));
+    }
 
+    private List<BusListResponse> mapToBusListResponse(Map<Integer, List<String>> sortedBusList) {
         return sortedBusList.entrySet().stream()
                 .map(entry -> new BusListResponse(
                         entry.getKey(),
