@@ -7,6 +7,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -15,14 +16,17 @@ public class ApiServiceImpl implements ApiService {
 
     private final RestTemplate restTemplate;
 
+    private final WebClient webClient;
+
     @Value("${application.stopPointUrl}")
     private String stopPointUrl;
 
     @Value("${application.journeyPatternUrl}")
     private String journeyPatternUrl;
 
-    public ApiServiceImpl(RestTemplate restTemplate) {
+    public ApiServiceImpl(RestTemplate restTemplate, WebClient.Builder webClientBuilder) {
         this.restTemplate = restTemplate;
+        this.webClient = webClientBuilder.build();
     }
 
 
